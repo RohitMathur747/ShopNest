@@ -10,4 +10,4 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/user", logoutUser);
 
-module.export = router;
+module.exports = router;

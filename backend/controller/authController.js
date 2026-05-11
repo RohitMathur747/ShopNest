@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 //register a new user
 const registerUser = async (req, res) => {
@@ -45,3 +46,46 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// login user
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    return res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// logout user (stateless JWT)
+const logoutUser = async (req, res) => {
+  return res.status(200).json({ message: "Logged out" });
+};
+
+const generateToken = (userId) => {
+  const secret = process.env.JWT_SECRET || "dev_jwt_secret";
+  return jwt.sign({ userId }, secret, { expiresIn: "7d" });
+};
+
+// Placeholder email sender to keep API working even if email setup isn't configured yet.
+const sendEmail = async ({ email, subject, message }) => {
+  // In production, replace with nodemailer + real provider.
+  if (!email) return;
+  return { email, subject, message };
+};
+
+module.exports = { registerUser, loginUser, logoutUser };
