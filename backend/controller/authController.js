@@ -1,6 +1,11 @@
 const User = require("../model/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const sendEmail = require("../utils/sendEmail");
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+};
 
 //register a new user
 const registerUser = async (req, res) => {
@@ -71,21 +76,17 @@ const loginUser = async (req, res) => {
   }
 };
 
-// logout user (stateless JWT)
-const logoutUser = async (req, res) => {
-  return res.status(200).json({ message: "Logged out" });
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
-const generateToken = (userId) => {
-  const secret = process.env.JWT_SECRET || "dev_jwt_secret";
-  return jwt.sign({ userId }, secret, { expiresIn: "7d" });
-};
+// NOTE: generateToken is declared once above.
+// module previously included a duplicate generateToken and a placeholder sendEmail.
+// Keeping only the real implementations.
 
-// Placeholder email sender to keep API working even if email setup isn't configured yet.
-const sendEmail = async ({ email, subject, message }) => {
-  // In production, replace with nodemailer + real provider.
-  if (!email) return;
-  return { email, subject, message };
-};
-
-module.exports = { registerUser, loginUser, logoutUser };
+module.exports = { registerUser, loginUser, getUsers };
