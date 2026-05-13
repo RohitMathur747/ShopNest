@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
 const { admin } = require("../middleware/adminMiddleware");
-import {
+const {
   getProducts,
   createProduct,
   getProductById,
   updateProduct,
   deleteProduct,
-} from "../controller/productController";
+} = require("../controller/productController");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
