@@ -1,4 +1,4 @@
-const Order = require("../models/Order");
+const Order = require("../model/order");
 const sendEmail = require("../utils/sendEmail");
 
 const addOrderItems = async (req, res) => {
@@ -72,4 +72,14 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-module.exports = { addOrderItems, getMyOrders, getOrders, updateOrderStatus };
+module.exports = {
+  // aliases expected by routes/orderRoutes.js
+  createOrder: addOrderItems,
+  getOrderById: getMyOrders,
+
+  // existing controllers
+  addOrderItems,
+  getMyOrders,
+  getOrders,
+  updateOrderStatus,
+};
