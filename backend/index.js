@@ -4,11 +4,15 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 dotenv.config();
-
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://127.0.0.1:3000"], // Adjust this to your frontend URL
+    credentials: true, // Allow cookies to be sent
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

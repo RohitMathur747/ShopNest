@@ -1,0 +1,17 @@
+{
+  "short_name": "ShopNest",
+  "name": "ShopNest - Ecommerce App",
+  "icons": [
+    {
+      "src": "/ShopNestLogo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "description": "ShopNest - Full-Stack MERN E-Commerce App"
+}
